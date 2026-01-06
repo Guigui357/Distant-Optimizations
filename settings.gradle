@@ -3,10 +3,11 @@ pluginManagement {
         maven {
             name = "Fabric"
             url = "https://maven.fabricmc.net/"
+            url = "https://maven.cafeteria.dev/releases"
         }
         gradlePluginPortal()
         mavenCentral()
     }
 }
 
-rootProject.name = "distant-horizons-lite-ultra-plus"
+rootProject.name = "distant-horizons-lite-ultra"
