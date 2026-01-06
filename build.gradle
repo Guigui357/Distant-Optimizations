@@ -1,26 +1,76 @@
 plugins {
     id 'java'
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.4.9' // versão estável e pública
 }
 
 group = 'me.horizonlite'
 version = '1.0.0'
 archivesBaseName = 'distant-horizons-lite-ultra-plus'
 
+// -------------------------------------------
+// REPOSITÓRIOS
+// -------------------------------------------
 repositories {
-    mavenCentral()
+    // Maven padrão do Fabric
     maven { url "https://maven.fabricmc.net/" }
-    maven { url "https://modmaven.dev" }
+
+    // Maven do CaffeineMC (Sodium oficial)
+    maven { url "https://maven.cafeteria.dev/releases" }
+
+    // Maven Central (para dependências comuns)
+    mavenCentral()
 }
 
+// -------------------------------------------
+// DEPENDÊNCIAS
+// -------------------------------------------
 dependencies {
+    // Minecraft + mappings oficiais
     minecraft "com.mojang:minecraft:1.20.1"
     mappings loom.officialMojangMappings()
+
+    // Fabric Loader + API
     modImplementation "net.fabricmc:fabric-loader:0.15.6"
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.92.0+1.20.1"
-    modImplementation "me.jellysquid.mods:sodium-fabric:0.5.8"
+
+    // Sodium (CaffeineMC Maven)
+    modImplementation "me.jellysquid.mods:sodium-fabric:0.5.3"
 }
 
+// -------------------------------------------
+// CONFIGURAÇÕES JAVA
+// -------------------------------------------
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(17)
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+
+    // Garante compatibilidade com mods e Java modernos
+    withSourcesJar()
+}
+
+// -------------------------------------------
+// TAREFAS E OTIMIZAÇÕES
+// -------------------------------------------
+
+// Encoding padrão UTF-8
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release = 17
+}
+
+// Reduz logs do Gradle
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-Xlint:unchecked", "-Xlint:deprecation"]
+}
+
+// Configura o arquivo de saída
+loom {
+    runs {
+        client {
+            client()
+            name "DHLite Ultra+ Client"
+            vmArgs "-Xmx4G"
+        }
+    }
 }
